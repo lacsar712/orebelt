@@ -36,6 +36,9 @@ func (d *Detector) Observe(s model.Sample) *Candidate {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	c := d.fsm(s.BeltID).Observe(s)
+	if c != nil {
+		c.BeltID = s.BeltID
+	}
 	return c
 }
 
