@@ -130,8 +130,11 @@ func (p *Processor) TickTimeouts(ctx context.Context) error {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	now := p.clock.Now()
-	if c := p.detector.Observe(model.Sample{TS: now}); c != nil {
-		if err := p.tryEmit(ctx, *c); err != nil {
+	for _, c := range p.detector.Tick(now) {
+		if err := ctx.Err(); err != nil {
+			return err
+		}
+		if err := p.tryEmit(ctx, c); err != nil {
 			return err
 		}
 	}
