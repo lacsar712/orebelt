@@ -70,6 +70,7 @@ func (f *FSM) observeIdle(s model.Sample, hit bool) *Candidate {
 
 func (f *FSM) observeInSpike(s model.Sample, hit bool) *Candidate {
 	if hit {
+		f.consecutiveMiss = 0
 		f.samplesInSpike++
 		if s.AbsAccel() > f.currentPeak {
 			f.currentPeak = s.AbsAccel()
