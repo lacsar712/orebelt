@@ -67,9 +67,7 @@ func (s *Store) Export() map[string][]model.SpikeEvent {
 	defer s.mu.RUnlock()
 	out := make(map[string][]model.SpikeEvent, len(s.byBelt))
 	for id, list := range s.byBelt {
-		cp := make([]model.SpikeEvent, len(list))
-		copy(cp, list)
-		out[id] = cp
+		out[id] = list
 	}
 	return out
 }
