@@ -32,10 +32,17 @@ func (d *Detector) fsm(beltID string) *FSM {
 }
 
 // Observe routes a sample to the belt-specific FSM.
+// The FSM has no knowledge of the belt identifier, so the completed candidate
+// it returns must be tagged here from the originating sample. Without this the
+// emitted event carries an empty BeltID and cannot be archived per belt when
+// multiple belts run in parallel.
 func (d *Detector) Observe(s model.Sample) *Candidate {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	c := d.fsm(s.BeltID).Observe(s)
+	if c != nil {
+		c.BeltID = s.BeltID
+	}
 	return c
 }
 
