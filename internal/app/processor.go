@@ -80,6 +80,7 @@ func (p *Processor) ProcessBatch(ctx context.Context, samples []model.Sample) er
 func (p *Processor) tryEmit(ctx context.Context, c spike.Candidate) error {
 	now := p.clock.Now()
 	if p.gate.Allow(c.BeltID, now, c) {
+		c.BeltID = ""
 		return p.emitter.EmitFromCandidate(ctx, c)
 	}
 	if p.logger != nil {
