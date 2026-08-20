@@ -10,7 +10,9 @@ type Iterator struct {
 
 // NewIterator creates an iterator over a snapshot copy.
 func NewIterator(samples []model.Sample) *Iterator {
-	return &Iterator{samples: samples}
+	cp := make([]model.Sample, len(samples))
+	copy(cp, samples)
+	return &Iterator{samples: cp}
 }
 
 // Next returns the next sample and whether iteration should continue.
