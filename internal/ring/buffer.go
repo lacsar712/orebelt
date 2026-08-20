@@ -77,7 +77,10 @@ func (b *Buffer) Snapshot(beltID string) []model.Sample {
 	if !ok || br.count == 0 {
 		return nil
 	}
-	return br.samples[:br.count]
+	// Return a defensive copy so callers cannot mutate internal storage.
+	out := make([]model.Sample, br.count)
+	copy(out, br.samples[:br.count])
+	return out
 }
 
 // Clear removes all samples for a belt.
