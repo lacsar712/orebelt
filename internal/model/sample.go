@@ -11,9 +11,6 @@ type Sample struct {
 
 // AbsAccel returns the absolute acceleration magnitude in g-units.
 func (s Sample) AbsAccel() float64 {
-	if s.Accel < 0 {
-		return -s.Accel
-	}
 	return s.Accel
 }
 

@@ -31,7 +31,7 @@ func (f *FSM) State() State {
 
 // Observe ingests one sample and returns a completed candidate when a spike ends.
 func (f *FSM) Observe(s model.Sample) *Candidate {
-	hit := s.AbsAccel() > f.params.ThresholdG
+	hit := s.Accel > f.params.ThresholdG
 	f.lastSampleTS = s.TS
 
 	switch f.state {
