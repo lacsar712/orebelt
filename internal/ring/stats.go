@@ -26,9 +26,10 @@ func (b *Buffer) CollectStats() []Stats {
 			Count:    len(snap),
 			Capacity: b.capacity,
 		}
+		// Snapshot is time-ascending: snap[0] is the oldest, the last is newest.
 		if len(snap) > 0 {
-			st.OldestTS = snap[len(snap)-1].TS
-			st.NewestTS = snap[0].TS
+			st.OldestTS = snap[0].TS
+			st.NewestTS = snap[len(snap)-1].TS
 		}
 		out = append(out, st)
 	}

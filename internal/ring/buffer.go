@@ -78,7 +78,13 @@ func (b *Buffer) Snapshot(beltID string) []model.Sample {
 		return nil
 	}
 	out := make([]model.Sample, br.count)
-	start := br.head
+	// head is the next write slot. Before the ring fills, samples occupy
+	// [0, count) in insertion order, so the oldest is at index 0. Once the
+	// ring is full, head wraps to the oldest slot (the next to be overwritten).
+	start := 0
+	if br.count == b.capacity {
+		start = br.head
+	}
 	for i := 0; i < br.count; i++ {
 		idx := (start + i) % b.capacity
 		out[i] = br.samples[idx]
