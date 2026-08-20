@@ -27,8 +27,8 @@ func (b *Buffer) CollectStats() []Stats {
 			Capacity: b.capacity,
 		}
 		if len(snap) > 0 {
-			st.OldestTS = snap[len(snap)-1].TS
-			st.NewestTS = snap[0].TS
+			st.OldestTS = snap[0].TS
+			st.NewestTS = snap[len(snap)-1].TS
 		}
 		out = append(out, st)
 	}

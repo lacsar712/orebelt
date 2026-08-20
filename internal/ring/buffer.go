@@ -78,7 +78,7 @@ func (b *Buffer) Snapshot(beltID string) []model.Sample {
 		return nil
 	}
 	out := make([]model.Sample, br.count)
-	start := br.head
+	start := (br.head - br.count + b.capacity) % b.capacity
 	for i := 0; i < br.count; i++ {
 		idx := (start + i) % b.capacity
 		out[i] = br.samples[idx]
