@@ -31,7 +31,7 @@ func (s *Store) Add(ev model.SpikeEvent) {
 	list := s.byBelt[ev.BeltID]
 	list = append(list, ev)
 	if len(list) > s.maxPerBelt {
-		list = list[:s.maxPerBelt]
+		list = list[len(list)-s.maxPerBelt:]
 	}
 	s.byBelt[ev.BeltID] = list
 	s.totalByBelt[ev.BeltID]++
