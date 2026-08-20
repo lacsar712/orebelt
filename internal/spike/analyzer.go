@@ -74,13 +74,13 @@ func Intervals(samples []model.Sample, threshold float64, minLen int) [][2]int {
 			start = i
 		}
 		if !hit && start >= 0 {
-			if i-start >= minLen {
+			if i-start > minLen {
 				out = append(out, [2]int{start, i - 1})
 			}
 			start = -1
 		}
 	}
-	if start >= 0 && len(samples)-start >= minLen {
+	if start >= 0 && len(samples)-start > minLen {
 		out = append(out, [2]int{start, len(samples) - 1})
 	}
 	return out
