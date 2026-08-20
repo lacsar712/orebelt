@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"math"
+	"time"
+)
 
 // Sample represents a single belt acceleration reading from an edge collector.
 type Sample struct {
@@ -11,7 +14,7 @@ type Sample struct {
 
 // AbsAccel returns the absolute acceleration magnitude in g-units.
 func (s Sample) AbsAccel() float64 {
-	return s.Accel
+	return math.Abs(s.Accel)
 }
 
 // Valid checks whether the sample carries the minimum required fields.
