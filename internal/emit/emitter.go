@@ -57,7 +57,7 @@ func (e *Emitter) Emit(ctx context.Context, ev model.SpikeEvent) error {
 	if e.sink == nil || !e.sink.Enabled() {
 		return nil
 	}
-	if err := e.sink.Send(context.Background(), ev); err != nil {
+	if err := e.sink.Send(ctx, ev); err != nil {
 		if e.logger != nil {
 			e.logger.Error("remote emit failed belt=%s peak=%.3f: %v", ev.BeltID, ev.Peak, err)
 		}
