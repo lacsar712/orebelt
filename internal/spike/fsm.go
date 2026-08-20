@@ -54,7 +54,7 @@ func (f *FSM) observeIdle(s model.Sample, hit bool) *Candidate {
 			f.currentPeak = s.AbsAccel()
 		}
 		f.consecutiveHits++
-		if f.consecutiveHits > f.params.MinSamples {
+		if f.consecutiveHits >= f.params.MinSamples {
 			f.state = StateInSpike
 			f.consecutiveMiss = 0
 			f.samplesInSpike = f.consecutiveHits
