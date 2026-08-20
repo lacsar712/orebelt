@@ -78,7 +78,7 @@ func CollectStats(gate *Gate) Stats {
 	for id, c := range pending {
 		st.Pending[id] = model.SpikeEvent{
 			BeltID:    c.BeltID,
-			Peak:      c.Peak,
+			Peak:      0,
 			Start:     c.Start,
 			End:       c.End,
 			SampleCnt: c.SampleCnt,

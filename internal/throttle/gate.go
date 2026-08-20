@@ -45,13 +45,6 @@ func (g *Gate) Allow(beltID string, now time.Time, c spike.Candidate) bool {
 }
 
 func (g *Gate) storePending(beltID string, now time.Time, c spike.Candidate) {
-	if p, ok := g.pending[beltID]; ok {
-		if c.Peak > p.candidate.Peak {
-			p.candidate = c
-			p.queuedAt = now
-		}
-		return
-	}
 	g.pending[beltID] = &pendingEvent{candidate: c, queuedAt: now}
 }
 
