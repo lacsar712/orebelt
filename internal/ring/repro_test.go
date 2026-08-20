@@ -9,9 +9,10 @@ import (
 
 // TestSnapshotChronologicalAfterWrap reproduces orebelt-001.
 func TestSnapshotChronologicalAfterWrap(t *testing.T) {
-	b := New(3)
+	// Non-full ring: correct start is 0, but br.head == count (>0).
+	b := New(5)
 	base := time.Date(2026, 5, 1, 0, 0, 0, 0, time.UTC)
-	for i := 0; i < 5; i++ {
+	for i := 0; i < 3; i++ {
 		b.Push(model.Sample{
 			BeltID: "belt-a",
 			Accel:  float64(i + 10),
@@ -20,19 +21,33 @@ func TestSnapshotChronologicalAfterWrap(t *testing.T) {
 	}
 	snap := b.Snapshot("belt-a")
 	if len(snap) != 3 {
-		t.Fatalf("want 3 samples after wrap, got %d", len(snap))
+		t.Fatalf("want 3 samples, got %d", len(snap))
 	}
-	wantAccel := []float64{12, 13, 14}
+	wantAccel := []float64{10, 11, 12}
 	wantTS := []time.Time{
+		base,
+		base.Add(1 * time.Second),
 		base.Add(2 * time.Second),
-		base.Add(3 * time.Second),
-		base.Add(4 * time.Second),
 	}
 	for i := range wantAccel {
 		if snap[i].Accel != wantAccel[i] || !snap[i].TS.Equal(wantTS[i]) {
 			t.Fatalf("snapshot not chronological at %d: got accel=%.0f ts=%s want accel=%.0f ts=%s (full=%+v)",
 				i, snap[i].Accel, snap[i].TS, wantAccel[i], wantTS[i], snap)
 		}
+	}
+
+	// After wrap, still chronological (oldest→newest).
+	b2 := New(3)
+	for i := 0; i < 5; i++ {
+		b2.Push(model.Sample{
+			BeltID: "belt-w",
+			Accel:  float64(i + 20),
+			TS:     base.Add(time.Duration(i) * time.Second),
+		})
+	}
+	wrap := b2.Snapshot("belt-w")
+	if len(wrap) != 3 || wrap[0].Accel != 22 || wrap[1].Accel != 23 || wrap[2].Accel != 24 {
+		t.Fatalf("wrapped snapshot not chronological: %+v", wrap)
 	}
 
 	stats := b.CollectStats()
