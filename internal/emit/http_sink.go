@@ -52,7 +52,7 @@ func (h *HTTPSink) Send(ctx context.Context, ev model.SpikeEvent) error {
 		if err := ctx.Err(); err != nil {
 			return err
 		}
-		req, err := http.NewRequestWithContext(context.Background(), http.MethodPost, h.url, bytes.NewReader(body))
+		req, err := http.NewRequestWithContext(ctx, http.MethodPost, h.url, bytes.NewReader(body))
 		if err != nil {
 			return fmt.Errorf("build request: %w", err)
 		}
