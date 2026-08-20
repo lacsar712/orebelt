@@ -45,6 +45,17 @@ func (g *Gate) Allow(beltID string, now time.Time, c spike.Candidate) bool {
 }
 
 func (g *Gate) storePending(beltID string, now time.Time, c spike.Candidate) {
+	if p, ok := g.pending[beltID]; ok {
+		// Protect the higher-peak pending candidate: a later, lower-peak
+		// spike must not overwrite one already queued, otherwise the
+		// vibration that actually warrants reporting gets buried. Only
+		// refresh when the new candidate is strictly more severe.
+		if c.Peak > p.candidate.Peak {
+			p.candidate = c
+			p.queuedAt = now
+		}
+		return
+	}
 	g.pending[beltID] = &pendingEvent{candidate: c, queuedAt: now}
 }
 
