@@ -70,6 +70,9 @@ func (f *FSM) observeIdle(s model.Sample, hit bool) *Candidate {
 
 func (f *FSM) observeInSpike(s model.Sample, hit bool) *Candidate {
 	if hit {
+		// A hit inside the spike breaks the miss streak; reset the end
+		// counter so the spike only ends on EndSamples consecutive misses.
+		f.consecutiveMiss = 0
 		f.samplesInSpike++
 		if s.AbsAccel() > f.currentPeak {
 			f.currentPeak = s.AbsAccel()
